@@ -45,6 +45,8 @@
 </div>
 <script>
     $(document).ready(function () {
+        debugger
+        $.get("Home/GetData").done();
         console.log(name);
         $('#subBtn').click(function () {
             debugger
@@ -65,17 +67,18 @@
                 alert(a);
                 return false;
             }
-            $.post("Home/AddData", { name, email, city, vehicle }).done();
+            $.post("AddData", { name, email, city, vehicle }).done();
 
-            var rowcount = $('tbody tr').length;
-            $('tbody').append('<tr data-rowcount = '+ rowcount +'><td>' + (rowcount + 1) + '</td>' +
-                '<td>' + name + '</td>' +
-                '<td>' + email + '</td>' +
-                '<td>' + city + '</td>' +
-                '<td>' + vehicle + '</td>' +
-                '<td><button type="button" id="del" class="btn btn-sm-danger"><i class="btn btn-danger fas fa-trash"></i></button></td></tr>');
-            console.log(city);
+        var rowcount = $('tbody tr').length;
+        $('tbody').append('<tr data-rowcount = ' + rowcount + '><td>' + (rowcount + 1) + '</td>' +
+            '<td>' + name + '</td>' +
+            '<td>' + email + '</td>' +
+            '<td>' + city + '</td>' +
+            '<td>' + vehicle + '</td>' +
+            '<td><button type="button" id="del" class="btn btn-sm-danger"><i class="btn btn-danger fas fa-trash"></i></button></td></tr>');
+        console.log(city);
         });
+
         $("#tbUser").on('click', '#del', function () {
             $(this).closest('tr').remove();
         });
