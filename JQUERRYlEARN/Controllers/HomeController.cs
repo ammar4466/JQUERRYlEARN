@@ -53,8 +53,9 @@ namespace JQUERRYlEARN.Controllers
             {
                 
                 SqlCommand cmd = new SqlCommand("Select *from employee", con);
-                cmd.CommandType = CommandType.Text;
-
+                DataSet ds = new DataSet();
+                
+               
                 con.Open();
                 cmd.ExecuteNonQuery();
                 con.Close();
