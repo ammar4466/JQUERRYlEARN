@@ -24,7 +24,7 @@ namespace JQUERRYlEARN.Controllers
         {  
             try
             {
-                SqlCommand cmd = new SqlCommand("insert into employee values(@Name, @Email, @City,@Vehicle)", con);
+                SqlCommand cmd = new SqlCommand("insert into tbl_employee values(@Name, @Email, @City,@Vehicle)", con);
                 cmd.CommandType = CommandType.Text;
                 cmd.Parameters.AddWithValue("@Name", model.Name);
                 cmd.Parameters.AddWithValue("@Email", model.Email);
@@ -45,19 +45,30 @@ namespace JQUERRYlEARN.Controllers
             }
             return Json(model);
         }
-        [HttpGet]
+        [HttpPost]
         [Route("GetData")]
         public ActionResult GetData(EmpModel model)
         {
+            List<EmpModel> empdata = new List<EmpModel>();
             try
             {
-                
-                SqlCommand cmd = new SqlCommand("Select *from employee", con);
-                DataSet ds = new DataSet();
-                
-               
+                 SqlCommand cmd = new SqlCommand("Select *from tbl_employee", con);
+                cmd.CommandType = CommandType.Text;
                 con.Open();
-                cmd.ExecuteNonQuery();
+                SqlDataReader dr = cmd.ExecuteReader();
+               // DataTable dt = new DataTable();
+                while(dr.Read())
+                {
+                    if (dr != null) {
+                        EmpModel emp = new EmpModel();
+                        emp.Id = Convert.ToInt32(dr["Id"]);
+                        emp.Name = Convert.ToString(dr["Name"]);
+                        emp.City = Convert.ToString(dr["City"]);
+                        emp.Email = Convert.ToString(dr["Email"]);
+                        emp.Vehicle = Convert.ToString(dr["Vehicle"]);
+                        empdata.Add(emp);
+                    }
+                }
                 con.Close();
 
             }
@@ -69,9 +80,19 @@ namespace JQUERRYlEARN.Controllers
                 }
 
             }
-            return Json(model);
+            return Json(empdata);
         }
-
+        [HttpPost]
+        [Route("DelData")]
+            public ActionResult DelData(int ID)
+        {
+            SqlCommand cmd = new SqlCommand("Delete from tbl_employee where ID = Id", con);
+            cmd.CommandType = CommandType.Text;
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+            return RedirectToAction("Index");
+        }
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

@@ -36,7 +36,8 @@
                 <th scope="col">Email</th>
                 <th scope="col">City</th>
                 <th scope="col">Vehicle</th>
-                <th scope="col">Action</th>
+                <th scope="col">Action</th>              
+                <th scope="col">Edit</th>              
             </tr>
         </thead>
         <tbody>
@@ -45,9 +46,25 @@
 </div>
 <script>
     $(document).ready(function () {
-        debugger
-        $.get("Home/GetData").done();
-        console.log(name);
+        debugger 
+        $.post("Home/GetData")
+            .done(function (result) {
+                debugger
+                console.log(result);
+                if (result) { 
+                    for (let i = 0; i < result.length; i++) {
+                        $('#tbUser').find('tbody')
+                            .append(`<tr><td>${result[i].Id}</td>
+                                        <td>${result[i].Name}</td>
+                                        <td>${result[i].Email}</td>
+                                        <td>${result[i].City}</td>
+                                        <td>${result[i].Vehicle}</td>
+                                        <td><button type="button" id="del" class="btn btn-sm-danger"><i class="btn btn-danger fas fa-trash"></i></button></td>
+                                        <td><button type="button" id="edit" class="btn btn-sm-primary"><i class="fa-solid fa-pen-to-square"></i></button></td>
+                                      </tr>`)
+                    }
+                }
+            });
         $('#subBtn').click(function () {
             debugger
             var name = $('input[name="name1"]').val();
@@ -81,6 +98,9 @@
 
         $("#tbUser").on('click', '#del', function () {
             $(this).closest('tr').remove();
+            $.post("DelData", { this.Id }).done(function (result){
+
+            })
         });
     });
 
