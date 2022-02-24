@@ -19,9 +19,9 @@ namespace JQUERRYlEARN.Controllers
         }
 
         [HttpPost]
-       [Route("AddData")]
+        [Route("AddData")]
         public ActionResult AddData(EmpModel model)
-        {  
+        {
             try
             {
                 SqlCommand cmd = new SqlCommand("insert into tbl_employee values(@Name, @Email, @City,@Vehicle)", con);
@@ -29,7 +29,7 @@ namespace JQUERRYlEARN.Controllers
                 cmd.Parameters.AddWithValue("@Name", model.Name);
                 cmd.Parameters.AddWithValue("@Email", model.Email);
                 cmd.Parameters.AddWithValue("@City", model.City);
-                cmd.Parameters.AddWithValue("@Vehicle", model.Vehicle);         
+                cmd.Parameters.AddWithValue("@Vehicle", model.Vehicle);
                 con.Open();
                 cmd.ExecuteNonQuery();
                 con.Close();
@@ -52,14 +52,15 @@ namespace JQUERRYlEARN.Controllers
             List<EmpModel> empdata = new List<EmpModel>();
             try
             {
-                 SqlCommand cmd = new SqlCommand("Select *from tbl_employee", con);
+                SqlCommand cmd = new SqlCommand("Select * from tbl_employee", con);
                 cmd.CommandType = CommandType.Text;
                 con.Open();
                 SqlDataReader dr = cmd.ExecuteReader();
-               // DataTable dt = new DataTable();
-                while(dr.Read())
+                // DataTable dt = new DataTable();
+                while (dr.Read())
                 {
-                    if (dr != null) {
+                    if (dr != null)
+                    {
                         EmpModel emp = new EmpModel();
                         emp.Id = Convert.ToInt32(dr["Id"]);
                         emp.Name = Convert.ToString(dr["Name"]);
@@ -84,14 +85,49 @@ namespace JQUERRYlEARN.Controllers
         }
         [HttpPost]
         [Route("DelData")]
-            public ActionResult DelData(int ID)
+        public ActionResult DelData(int Id=0)
         {
-            SqlCommand cmd = new SqlCommand("Delete from tbl_employee where ID = Id", con);
+            SqlCommand cmd = new SqlCommand("Delete from tbl_employee where Id = @Id", con);
             cmd.CommandType = CommandType.Text;
+            cmd.Parameters.AddWithValue("@Id", Id);
             con.Open();
             cmd.ExecuteNonQuery();
             con.Close();
             return RedirectToAction("Index");
+        }
+        [HttpPost]
+        [Route("EditData")]
+        public ActionResult EditData(int Id = 0)
+        {
+            EmpModel emp = new EmpModel();
+            try
+            {
+                SqlCommand cmd = new SqlCommand("select *  from tbl_employee where Id= @Id", con);
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.AddWithValue("@Id", Id);
+                con.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+                dr.Read();
+                    if (dr != null)
+                    {
+                        emp.Id = Convert.ToInt32(dr["Id"]);
+                        emp.Name = Convert.ToString(dr["Name"]);
+                        emp.City = Convert.ToString(dr["City"]);
+                        emp.Email = Convert.ToString(dr["Email"]);
+                        emp.Vehicle = Convert.ToString(dr["Vehicle"]);
+                    }
+                
+                con.Close();
+            }
+            catch(Exception ex)
+            {
+                if (con.State == ConnectionState.Open)
+                {
+                    con.Close();
+                }
+
+            }
+            return Json(emp);
         }
         public ActionResult About()
         {
