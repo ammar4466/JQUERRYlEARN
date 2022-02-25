@@ -46,6 +46,34 @@ namespace JQUERRYlEARN.Controllers
             return Json(model);
         }
         [HttpPost]
+        [Route("Update")]
+        public ActionResult Update(EmpModel model)
+        {
+            try
+            {
+                SqlCommand cmd = new SqlCommand("Update tbl_employee set Name=@Name,Email=@Email,City=@City,Vehicle=@Vehicle where Id = @Id", con);
+                cmd.CommandType = CommandType.Text;
+                cmd.Parameters.AddWithValue("@Id", model.Id);
+                cmd.Parameters.AddWithValue("@Name", model.Name);
+                cmd.Parameters.AddWithValue("@Email", model.Email);
+                cmd.Parameters.AddWithValue("@City", model.City);
+                cmd.Parameters.AddWithValue("@Vehicle", model.Vehicle);
+                con.Open();
+                cmd.ExecuteNonQuery();
+                con.Close();
+
+            }
+            catch (Exception ex)
+            {
+                if (con.State == ConnectionState.Open)
+                {
+                    con.Close();
+                }
+
+            }
+            return Json(model);
+        }
+        [HttpPost]
         [Route("GetData")]
         public ActionResult GetData(EmpModel model)
         {

@@ -66,36 +66,65 @@
                     }
                 }
             });
+
+        //if ($("#subBtn").text() == "Update") {
+        //    debugger
         $('#subBtn').click(function () {
             debugger
-            var name = $('input[name="name1"]').val();
-            var email = $('input[name="email1"]').val();
-            var city = $('select[name="city1"]').val();
-            if ($('#check_id2' || '#check_id1').is(":checked")) {
-                var vehicle = $('#check_id2' || '#check_id1').val();
-            }
-           else if ($('#check_id1').is(":checked")) {
-                var vehicle = $("#check_id1").val();
-            }
-           else if ($('#check_id2').is(":checked")) {
-                var vehicle = $("#check_id2").val();
+            if ($("#subBtn").text() == "Update") {
+                var id = $('input[name="id"]').val();
+                var name = $('input[name="name1"]').val();
+                var email = $('input[name="email1"]').val();
+                var city = $('select[name="city1"]').val();
+                if ($('#check_id2' || '#check_id1').is(":checked")) {
+                    var vehicle = $('#check_id2' || '#check_id1').val();
+                }
+                else if ($('#check_id1').is(":checked")) {
+                    var vehicle = $("#check_id1").val();
+                }
+                else if ($('#check_id2').is(":checked")) {
+                    var vehicle = $("#check_id2").val();
+                }
+                else {
+                    a = "Plz Check"
+                    alert(a);
+                    return false;
+                }
+                $.post("Home/Update", { id, name, email, city, vehicle }).done();
+                console.log(city);
+                location.reload();
             }  
-            else {
-                a = "Plz Check"
-                alert(a);
-                return false;
+        else {
+                var name = $('input[name="name1"]').val();
+                var email = $('input[name="email1"]').val();
+                var city = $('select[name="city1"]').val();
+                if ($('#check_id2' || '#check_id1').is(":checked")) {
+                    var vehicle = $('#check_id2' || '#check_id1').val();
+                }
+                else if ($('#check_id1').is(":checked")) {
+                    var vehicle = $("#check_id1").val();
+                }
+                else if ($('#check_id2').is(":checked")) {
+                    var vehicle = $("#check_id2").val();
+                }
+                else {
+                    a = "Plz Check"
+                    alert(a);
+                    return false;
+                }
+                $.post("Home/AddData", { name, email, city, vehicle }).done();
+                var rowcount = $('tbody tr').length;
+                $('tbody').append('<tr data-rowcount = ' + rowcount + '><td>' + (rowcount + 1) + '</td>' +
+                    '<td>' + name + '</td>' +
+                    '<td>' + email + '</td>' +
+                    '<td>' + city + '</td>' +
+                    '<td>' + vehicle + '</td>' +
+                    '<td><button type="button" id="del" class="btn btn-sm-danger"><i class="btn btn-danger fas fa-trash"></i></button></td></tr>');
+                console.log(city);
+                location.reload();
             }
-            $.post("Home/AddData", { name, email, city, vehicle }).done();
-        var rowcount = $('tbody tr').length;
-        $('tbody').append('<tr data-rowcount = ' + rowcount + '><td>' + (rowcount + 1) + '</td>' +
-            '<td>' + name + '</td>' +
-            '<td>' + email + '</td>' +
-            '<td>' + city + '</td>' +
-            '<td>' + vehicle + '</td>' +
-            '<td><button type="button" id="del" class="btn btn-sm-danger"><i class="btn btn-danger fas fa-trash"></i></button></td></tr>');
-            console.log(city);
-            location.reload();
         });
+      
         
         //$("#tbUser").on('click', '#del', function () {
         //   // $(this).closest('tr').remove();
@@ -111,12 +140,11 @@
         debugger
         $.post('Home/EditData', { Id: Id }).done(function (result) {
             console.log(result);
-            $('input[name="id"]').val(result.Name);
+            $('input[name="id"]').val(result.Id);
             $('input[name="name1"]').val(result.Name);
             $('input[name="email1"]').val(result.Email);
             $('select[name="city1"]').val(result.City);
-            
-            
+            $('#subBtn').text("Update");
         });
     }
 </script>
